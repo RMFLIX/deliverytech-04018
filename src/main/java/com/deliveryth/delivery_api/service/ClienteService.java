@@ -34,7 +34,7 @@ public class ClienteService {
     
     public void inativar(Long id){
         Cliente cliente = buscarPorId(id);
-        cliente.setAtivo(null);
+        cliente.setAtivo(false);
         repository.save(cliente);
     }
 

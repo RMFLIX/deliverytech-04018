@@ -38,7 +38,7 @@ public class ClienteController {
        return service.buscarPorId(id);
     }
 
-    @GetMapping("/{id}/inativar-cliente")
+    @PutMapping("/{id}/inativar-cliente")
     public void inativar(@PathVariable Long id){
         service.inativar(id);
     }
