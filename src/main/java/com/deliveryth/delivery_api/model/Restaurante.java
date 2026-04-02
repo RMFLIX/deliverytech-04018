@@ -21,30 +21,34 @@ import lombok.Setter;
 @Table(name = "restaurante")
 public class Restaurante {
 
-     @Id
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-@Column(name = "nm_restaurante")
-     private String nome;
+    @Column(name = "restaurante")
+    private String nome;
 
-@Column(name = "tp_categoria")
-     private String categoria;
+    @Column(name = "categoria")
+    private String categoria;
 
-@Column(name = "ds_endereco")
-     private String endereco;
+    @Column(name = "endereco")
+    private String endereco;
 
-@Column(name = "nr_telefone")
-     private String telefone;
+    @Column(name = "telefone")
+    private String telefone;
 
      /* @Column(name = taxa_entrega) private BigDecimal taxaEntrega;  */
 
-@Column(name = "vl_avaliacao")
+    @Column(name = "avaliacao")
     private BigDecimal avaliacao;
 
-@Column(name = "st_ativo")
+    @Column(name = "ativo")
     private boolean ativo = true;
     
     @OneToMany(mappedBy = "restaurante", fetch=FetchType.LAZY)
     private List<Produto> produtos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurante", fetch=FetchType.LAZY)
+    private List<Pedido> pedidos = new ArrayList<>();
+
 }

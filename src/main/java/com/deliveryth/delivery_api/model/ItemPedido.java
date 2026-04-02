@@ -17,28 +17,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "produtos")
-public class Produto {
+@Table(name = "item_pedido")
+public class ItemPedido {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "produto")
-    private String nome;
+    private Integer quantidade;
+    
+    @Column(name = "preco_unitario")
+    private BigDecimal precoUnitario;
 
-    @Column(name = "descricao")
-    private String descricao;
+    private BigDecimal subtotal;
 
-    @Column(name = "preco")
-    private BigDecimal preco;
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name="produto_id")
+    private Produto produto;
 
-    @Column(name = "categoria")
-    private String categoria;
-
-    @Column(name = "disponivel")
-    private boolean disponivel = true;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name="pedido_id")
+    private Pedido pedido;
 }
+ 
