@@ -181,12 +181,31 @@ public class DataLoader {
 
             itemPedidoRepository.saveAll(List.of(i1, i2));
 
+            pedido1.setValorTotal(i1.getSubtotal().add(pedido1.getTaxaEntrega()));
+            pedido2.setValorTotal(i2.getSubtotal().add(pedido2.getTaxaEntrega()));
+            pedidoRepository.save(pedido1);
+            pedidoRepository.save(pedido2);
+
             System.out.println("=====DTO - Itens do pedido======");
             itemPedidoRepository.buscarItensPorPedido(pedido1.getId())
             .forEach(i -> System.out.println(
                 "produto: " + i.getNomeProduto() +
                 "| Qtd: " + i.getQuantidade() +
                 "| Subtotal: " + i.getSubtotal()
+            ));
+
+            itemPedidoRepository.buscarItensPorPedido(pedido2.getId())
+            .forEach(i -> System.out.println(
+                "produto: " + i.getNomeProduto() +
+                "| Qtd: " + i.getQuantidade() +
+                "| Subtotal: " + i.getSubtotal()
+            ));
+
+            System.out.println("=====DTO - Vendas por restaurante ======");
+
+            pedidoRepository.buscarVendasPorRestaurante()
+            .forEach(r -> System.out.println(
+                r.getNomeRestaurante() + " - " + r.getTotalVendas()
             ));
          };
     }
