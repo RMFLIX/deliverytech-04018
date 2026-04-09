@@ -158,13 +158,9 @@ public class DataLoader {
             pedido2.setValorTotal(BigDecimal.ZERO);
             pedido2.setRestaurante(r2);
 
-
-
-
             pedidoRepository.saveAll(List.of(pedido1, pedido2));
 
             System.out.println("=====Inserindo ItensPedido======");
-
             ItemPedido i1 = new ItemPedido();
             i1.setPedido(pedido1);
             i1.setProduto(p1);
