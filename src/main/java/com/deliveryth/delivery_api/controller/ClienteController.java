@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.deliveryth.delivery_api.dto.requests.ClienteDTO;
 import com.deliveryth.delivery_api.dto.responses.ClienteResponseDTO;
-import com.deliveryth.delivery_api.model.Cliente;
 import com.deliveryth.delivery_api.service.ClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/clientes")
+@Tag(name="Clientes", description ="Endpoints para gerenciamento de clientes.")
 public class ClienteController {
     private ClienteService service;
 
@@ -33,6 +37,13 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(dto));
     }
 
+    @Operation(summary ="Listar clientes ativos.")
+    @ApiResponses(
+        value ={
+            @ApiResponse(responseCode="200", description ="Lista de clientes ativos retornados.")
+            
+        }
+    )
     @GetMapping
     public List<ClienteResponseDTO> listarAtivos(){
         return service.listarAtivos();

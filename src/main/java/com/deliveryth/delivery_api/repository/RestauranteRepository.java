@@ -13,4 +13,6 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
    List<Restaurante> findByCategoria(String categoria);
    List<Restaurante> findByAtivoTrue();
-}
+   
+   }
+
