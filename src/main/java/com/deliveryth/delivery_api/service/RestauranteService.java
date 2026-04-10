@@ -13,7 +13,7 @@ public interface RestauranteService { RestauranteService cadastrarRestaurante(Re
 
     List<RestauranteResponseDTO>listarTodosAtivos();
 
-    List<RestauranteResponseDTO>filtrarPorCategotia(String categoria);
+    List<RestauranteResponseDTO>filtrarPorCategoria(String categoria);
 
     RestauranteResponseDTO atualizarDados(Long id, RestauranteDTO dto);
 

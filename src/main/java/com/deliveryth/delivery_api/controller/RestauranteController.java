@@ -42,7 +42,7 @@ public class RestauranteController {
 
     @GetMapping("/categoria/{categoria}") 
     public ResponseEntity<List<RestauranteResponseDTO>> buscarPorCategoria(@PathVariable String categoria) { 
-        return ResponseEntity.ok(restauranteService.filtrarPorCategotia(categoria)); } 
+        return ResponseEntity.ok(restauranteService.filtrarPorCategoria(categoria)); } 
         
     @PutMapping("/{id}") 
     public ResponseEntity<RestauranteResponseDTO> atualizar(@PathVariable Long id, @RequestBody RestauranteDTO dto) { 
