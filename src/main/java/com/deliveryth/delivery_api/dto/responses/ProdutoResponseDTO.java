@@ -10,9 +10,14 @@ import lombok.Setter;
 public class ProdutoResponseDTO {
     private Long id;
     private String nome;
+
     private String descricao;
+
     private String categoria;
+
     private BigDecimal preco;
+
     private boolean disponivel;
-    private String restauranteId;
+
+    private Long restauranteId;
 }

@@ -16,7 +16,8 @@ import com.deliveryth.delivery_api.repository.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
 
-@Service public class ProdutoService { 
+@Service 
+public class ProdutoService { 
     private final ProdutoRepository produtoRepository; 
     private final RestauranteRepository restauranteRepository; 
     private final ModelMapper mapper; 

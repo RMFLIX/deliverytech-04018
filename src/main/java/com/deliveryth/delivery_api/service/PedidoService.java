@@ -123,13 +123,13 @@ public class PedidoService {
 
         StatusPedido statusPedido = pedido.getStatus();
         
-        switch(statusAtual) {
+        switch (statusPedido) {
             case CONFIRMADO -> pedido.setStatus(StatusPedido.PREPARANDO);
             case PREPARANDO -> pedido.setStatus(StatusPedido.SAIU_PARA_ENTREGA);
-            case SAIU_PARA_ENTREGA -> pedido.setStatus(statusPedido.ENTREGUE);
-
-            case CANCELADO, ENTREGUE  ->
-                throw new BusinessException("Status do Pedido não pode mais ser avançado.");
+            case SAIU_PARA_ENTREGA -> pedido.setStatus(StatusPedido.ENTREGUE);
+                
+            case CANCELADO, ENTREGUE ->
+                 throw new BusinessException("Status do Pedido não pode mais ser avançado.");
             default ->
                 throw new BusinessException("Status é inválido para avanço.");
         }

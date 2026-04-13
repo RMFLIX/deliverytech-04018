@@ -14,7 +14,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
    Page<Restaurante> findByAtivoTrue(Pageable pageable);
 
-   Page<Restaurante> findByCategoriaAndAtivoTrue(String categoria);
+   Page<Restaurante> findByCategoriaAndAtivoTrue(String categoria, Pageable pageable);
 
    boolean existsByNome(String nome);
 

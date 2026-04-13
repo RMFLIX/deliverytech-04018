@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.deliveryth.delivery_api.dto.ItemPedidoDTO;
+import com.deliveryth.delivery_api.dto.ipDTO;
 import com.deliveryth.delivery_api.model.ItemPedido;
 
 @Repository
@@ -22,5 +22,5 @@ public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long>{
             JOIN i.produto p
             WHERE i.pedido.id = :pedidoId
     """)
-    List<ItemPedidoDTO> buscarItensPorPedido(@Param("pedidoId") Long pedidoId);
+    List<ipDTO> buscarItensPorPedido(@Param("pedidoId") Long pedidoId);
 }

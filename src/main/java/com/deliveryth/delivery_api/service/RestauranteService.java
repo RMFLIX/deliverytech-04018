@@ -1,7 +1,6 @@
 package com.deliveryth.delivery_api.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -47,7 +46,7 @@ public class RestauranteService {
     }
 
     public Page<RestauranteResponseDTO> buscarPorCategoria(String categoria, Pageable pageable) { 
-        return repository.findByCategoriaAndAtivoTrue(categoria, pageable) 
+        return repository.findByCategoriaAndAtivoTrue(categoria, pageable)
         .map(r -> mapper.map(r, RestauranteResponseDTO.class)); 
     } 
         

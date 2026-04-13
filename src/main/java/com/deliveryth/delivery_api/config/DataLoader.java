@@ -7,7 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 
 import com.deliveryth.delivery_api.enums.StatusPedido;
 import com.deliveryth.delivery_api.model.Cliente;
@@ -75,8 +75,8 @@ public class DataLoader {
 
             Pageable pageable = PageRequest.of(0, 10);
             System.out.println("<Clientes ativos:");
-            clienteRepository.findByAtivoTrue(pageable);
-                  .forEach(c -> System.out.println(c.getNome()));
+            clienteRepository.findByAtivoTrue(pageable)
+                 .forEach(c -> System.out.println(c.getNome()));
 
             System.out.println("======Inserindo Restaurante======");
 
