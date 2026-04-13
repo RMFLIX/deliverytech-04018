@@ -41,7 +41,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     
     
     @Query(""" 
-        select new com.deliverytech.delivery_api.dto.TotalVendasPorRestauranteDTO( 
+        select new com.deliveryth.delivery_api.dto.TotalVendasPorRestauranteDTO( 
                 r.nome, 
                 coalesce(sum(ip.subtotal), 0) 
             ) 

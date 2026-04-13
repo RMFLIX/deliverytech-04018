@@ -73,7 +73,7 @@ public class ClienteController {
 
     }
 
-    @Operation(summary="Buscar clientes Id")
+    @Operation(summary="Buscar cliente por Id")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso."),

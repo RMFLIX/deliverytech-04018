@@ -74,7 +74,7 @@ public class DataLoader {
             System.out.println("Existe Maria?" + existe);
 
             Pageable pageable = PageRequest.of(0, 10);
-            System.out.println("<Clientes ativos:");
+            System.out.println("> Clientes ativos:");
             clienteRepository.findByAtivoTrue(pageable)
                  .forEach(c -> System.out.println(c.getNome()));
 
