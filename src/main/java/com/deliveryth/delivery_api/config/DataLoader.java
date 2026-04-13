@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.PageRequest;
+import org.springdoc.core.converters.models.Pageable;
 
 import com.deliveryth.delivery_api.enums.StatusPedido;
 import com.deliveryth.delivery_api.model.Cliente;
@@ -55,6 +57,7 @@ public class DataLoader {
             c3.setEndereco("av 3, 333");
             c3.setAtivo(true);
 
+
             clienteRepository.saveAll(List.of(c1, c2, c3));
 
             System.out.println("======Consultando Clientes======");
@@ -70,9 +73,10 @@ public class DataLoader {
             boolean existe = clienteRepository.existsByEmail("mariana@gmail.com");
             System.out.println("Existe Maria?" + existe);
 
-            System.out.println("> Clientes ativos:");
-            clienteRepository.findByAtivoTrue()
-                 .forEach(c -> System.out.println(c.getNome()));
+            Pageable pageable = PageRequest.of(0, 10);
+            System.out.println("<Clientes ativos:");
+            clienteRepository.findByAtivoTrue(pageable);
+                  .forEach(c -> System.out.println(c.getNome()));
 
             System.out.println("======Inserindo Restaurante======");
 
@@ -98,12 +102,12 @@ public class DataLoader {
 
             System.out.println("> Buscar Restaurante por Categoria");
 
-            restauranteRepository.findByCategoria("Hamburgueria")
+            /* restauranteRepository.findByCategoria("Hamburgueria")
             .forEach(c -> System.out.println("Restaurante(Hamburgueria): " + c.getNome()));
 
             System.out.println("> Restaurantes ativos");
             restauranteRepository.findByAtivoTrue()
-                 .forEach(r -> System.out.println(r.getNome()));
+                 .forEach(r -> System.out.println(r.getNome())); */
             
             System.out.println("======Inserindo Produtos======");
 

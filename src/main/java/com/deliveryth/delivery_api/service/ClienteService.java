@@ -3,6 +3,8 @@ package com.deliveryth.delivery_api.service;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.deliveryth.delivery_api.dto.requests.ClienteDTO;
@@ -39,11 +41,9 @@ public class ClienteService {
         return mapper.map(salvo, ClienteResponseDTO.class);
     }
 
-    public List<ClienteResponseDTO> listarAtivos(){
-        return repository.findByAtivoTrue()
-        .stream()
-        .map(c -> mapper.map(c, ClienteResponseDTO.class))
-        .toList();
+    public Page<ClienteResponseDTO> listarAtivos(Pageable pageable){
+        return repository.findByAtivoTrue(pageable)
+        .map(clientes -> mapper.map(clientes, ClienteResponseDTO.class));
     }
 
 
