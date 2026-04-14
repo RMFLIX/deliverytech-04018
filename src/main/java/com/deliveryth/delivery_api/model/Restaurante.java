@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.deliveryth.delivery_api.enums.CategoriaRestaurante;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,7 +31,7 @@ public class Restaurante {
     private String nome;
 
     @Column(name = "categoria")
-    private String categoria;
+    private CategoriaRestaurante categoria;
 
     @Column(name = "endereco")
     private String endereco;

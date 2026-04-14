@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deliveryth.delivery_api.dto.requests.RestauranteDTO;
 import com.deliveryth.delivery_api.dto.responses.RestauranteResponseDTO;
+import com.deliveryth.delivery_api.enums.CategoriaRestaurante;
 import com.deliveryth.delivery_api.exception.BusinessException;
 import com.deliveryth.delivery_api.exception.EntityNotFoundException;
 import com.deliveryth.delivery_api.model.Restaurante;
@@ -32,7 +33,10 @@ public class RestauranteService {
             throw new BusinessException("Restaurante com esse nome já cadastrado."); 
     } 
     
+    CategoriaRestaurante categoriaEnum = CategoriaRestaurante.valueOf(dto.getCategoria().toLowerCase());
+    
     Restaurante r = mapper.map(dto, Restaurante.class); 
+    r.setCategoria(categoriaEnum);
     r.setAtivo(true); 
     r.setAvaliacao(BigDecimal.ZERO); 
     
@@ -46,7 +50,15 @@ public class RestauranteService {
     }
 
     public Page<RestauranteResponseDTO> buscarPorCategoria(String categoria, Pageable pageable) { 
-        return repository.findByCategoriaAndAtivoTrue(categoria, pageable)
+        CategoriaRestaurante categoriaEnum;
+
+        try{
+            categoriaEnum = CategoriaRestaurante.valueOf(categoria.toUpperCase());
+        }catch(IllegalArgumentException e){
+            throw new BusinessException("Categoria inválida.");
+        }
+
+        return repository.findByCategoriaAndAtivoTrue(categoriaEnum, pageable)
         .map(r -> mapper.map(r, RestauranteResponseDTO.class)); 
     } 
         
