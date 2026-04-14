@@ -1,9 +1,10 @@
 package com.deliveryth.delivery_api.dto.requests;
 
+import com.deliveryth.delivery_api.validation.TelefoneValido;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,12 +23,15 @@ public class ClienteDTO {
     @NotBlank(message = "Campo de E-mail é obrigatorio")
     private String email;
 
-    @Pattern(regexp="^\\(\\d{2}\\)//d{4,5}-\\d{4}$",
-        message ="Formato de telefone inválido. Use (xx)xxxxx-xxxx")
+    @Schema(description = "Telefone/celular do cliente", example = "(xx)xxxxx-xxxx")
+    /*@Pattern(regexp="^\\(\\d{2}\\)//d{4,5}-\\d{4}$",
+        message ="Formato de telefone inválido. Use (xx)xxxxx-xxxx") */
 
+    @TelefoneValido
     @NotBlank(message="Campo telefone é obrigatório.")
     private String telefone;
 
+    @Schema(description = "Endereço do cliente", example = "rua/av teste, 123")
     @Size(min= 5, message="Endereço deve ter no mínimo 5 caracteres")
     private String endereco;
 }
