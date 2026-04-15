@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-
-
 public record PagedResponse<T>(
     List<T> content,
     int page,
