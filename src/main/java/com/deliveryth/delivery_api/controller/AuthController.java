@@ -19,7 +19,7 @@ import com.deliveryth.delivery_api.Security.JwtUtil;
 
 
 @RestController
-@RequestMapping("/ap/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UsuarioRepository repository;
@@ -41,9 +41,9 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("E-mail já cadastrado.");
         }
 
-        if(request.getRole() == Role.ADMIN){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Não é permitido criar um usuário.");
- 
+        //Use (//) para executar o ADMIN no Swagger.
+         if(request.getRole() == Role.ADMIN){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Não é permitido criar um usuário.");
         }
 
         Usuario usuario = new Usuario();
@@ -65,7 +65,7 @@ public class AuthController {
         .body(new LoginResponseDTO(token));
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO login) {
        
         Usuario usuario = repository.findByEmail(login.getEmail())
