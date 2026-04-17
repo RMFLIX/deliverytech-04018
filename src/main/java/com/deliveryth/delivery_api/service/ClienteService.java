@@ -11,6 +11,7 @@ import com.deliveryth.delivery_api.dto.responses.ClienteResponseDTO;
 import com.deliveryth.delivery_api.exception.BusinessException;
 import com.deliveryth.delivery_api.exception.EntityNotFoundException;
 import com.deliveryth.delivery_api.model.Cliente;
+import com.deliveryth.delivery_api.model.Usuario;
 import com.deliveryth.delivery_api.repository.ClienteRepository;
 
 import jakarta.transaction.Transactional;
@@ -29,7 +30,7 @@ public class ClienteService {
     } 
 
     @Transactional
-    public ClienteResponseDTO cadastrar(ClienteDTO dto){
+    public ClienteResponseDTO cadastrar(ClienteDTO dto, Usuario usuariologado){
         if( repository.existsByEmail(dto.getEmail()) ){
             throw new BusinessException("E-mail já cadastrado.");
         }

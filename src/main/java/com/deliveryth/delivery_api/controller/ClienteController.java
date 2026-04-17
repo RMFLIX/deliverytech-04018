@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.deliveryth.delivery_api.dto.requests.ClienteDTO;
 import com.deliveryth.delivery_api.dto.responses.ClienteResponseDTO;
 import com.deliveryth.delivery_api.dto.responses.PagedResponse;
+import com.deliveryth.delivery_api.model.Usuario;
 import com.deliveryth.delivery_api.service.ClienteService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping(value = "/api/clientes", produces = "application/json")
 @Tag(name="Clientes", description ="Endpoints para gerenciamento de clientes.")
 public class ClienteController {
     private ClienteService service;
@@ -47,9 +49,14 @@ public class ClienteController {
     )
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<ClienteResponseDTO> cadastrar(@Valid @RequestBody ClienteDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(dto));
-    }
+    public ResponseEntity<ClienteResponseDTO> cadastrar(
+        @Valid @RequestBody ClienteDTO dto,
+        @AuthenticationPrincipal Usuario logado){
+
+            return  ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(service.cadastrar(dto, logado));
+        }
 
     @Operation(summary ="Listar clientes ativos.")
     @ApiResponses(

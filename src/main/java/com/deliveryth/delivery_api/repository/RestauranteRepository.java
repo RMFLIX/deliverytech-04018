@@ -21,5 +21,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
    List<Restaurante> findByNomeContainingIgnoreCase(String nome);
    List<Restaurante> findByAtivoTrueOrderByAvaliacaoDesc();
+
+   boolean existsByUsuario_Id(Long usuarioId);
    }
 
