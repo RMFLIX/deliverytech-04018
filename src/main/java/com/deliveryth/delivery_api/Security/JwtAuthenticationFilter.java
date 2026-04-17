@@ -14,10 +14,7 @@ import com.deliveryth.delivery_api.model.Usuario;
 import com.deliveryth.delivery_api.repository.UsuarioRepository;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.GenericFilter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -34,11 +31,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     }
 
     @Override
-    public void doFilterInternal(
+    protected void doFilterInternal(
         HttpServletRequest request,
         HttpServletResponse response,
         FilterChain chain)
       throws IOException, ServletException{
+
+       String path = request.getRequestURI();
+       if (path.startsWith("/swagger-ui") || path.contains("/v3/api-docs") || path.contains("/webjars")){
+        chain.doFilter(request, response);
+        return;
+       }
 
        String token = extractToken(request);
 

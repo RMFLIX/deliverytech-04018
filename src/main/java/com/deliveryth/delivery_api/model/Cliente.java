@@ -4,6 +4,8 @@ package com.deliveryth.delivery_api.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class Cliente {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "cliente", fetch =FetchType.LAZY)
+    @JsonIgnore
     private List<Pedido> pedidos = new ArrayList<>();
 
     public Boolean isAtivo(){

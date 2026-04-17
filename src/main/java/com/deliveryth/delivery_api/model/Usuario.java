@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.deliveryth.delivery_api.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,9 +44,11 @@ public class Usuario implements UserDetails {
     private Usuario usuario;
 
     @OneToOne(mappedBy = "usuario")
+    @JsonIgnore // IMPORTANTE!
     private Cliente cliente;
 
     @OneToOne(mappedBy = "usuario")
+    @JsonIgnore // IMPORTANTE!
     private Restaurante restaurante;
 
     @Override
