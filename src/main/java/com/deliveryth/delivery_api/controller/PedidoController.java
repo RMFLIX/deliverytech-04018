@@ -36,7 +36,7 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @Operation(summary = "Criar um novo pedido.")
+    @Operation(summary = "Criar um novo pedido.", description = "Este edpoint registra um novo pedido no sistema. É necessário enviar o ID do cliente, o ID do restaurante e a lista de itens.")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(
         responseCode = "201",
         description = "Pedido criado com secesso."
@@ -46,7 +46,7 @@ public class PedidoController {
         return ResponseEntity.ok(new ApiResponse<>(pedidoService.criarPedido(dto)));
     }
 
-    @Operation(summary = "Listar histórico de pedidos do cliente (paginado).")
+    @Operation(summary = "Listar histórico de pedidos do cliente (paginado).", description = "Retornar todos os detalhes de um pedido específico, incluindo o status atual (PENDENTE, PREPARANDO, ENTREGUE).")
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<PagedResponse<PedidoResponseDTO>> listarPorCliente(
         @PathVariable Long clienteId,
@@ -74,7 +74,7 @@ public class PedidoController {
             return ResponseEntity.ok(new ApiResponse<>(resultado));
         }
 
-        @Operation(summary = "Avançar o status do pedido (Fluxo: CONFIRMADO -> PREPARANDO-> ENTREGA.")
+        @Operation(summary = "Avançar o status do pedido (Fluxo: CONFIRMADO -> PREPARANDO-> ENTREGA.", description = "Permite que o restaurante alterne do pedido. Exemplo: De 'PENDENTE' para 'PREPARANDO'.")
         @PatchMapping("/{id}/status/avancar")
         public ResponseEntity<ApiResponse<PedidoResponseDTO>> avancarStatus(@PathVariable Long id){
             return ResponseEntity.ok(new ApiResponse<>(pedidoService.atualizarStatus(id)));

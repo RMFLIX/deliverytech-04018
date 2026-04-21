@@ -52,7 +52,7 @@ public class ProdutoController {
              .body(new ApiResponse<>(resposta)); 
     } 
     
-    @Operation(summary = "Listar produtos disponíveis de um restaurante (paginado).") 
+    @Operation(summary = "Listar produtos disponíveis de um restaurante (paginado).", description = "Buascar todos os produtos associados a um restaurante específico. Útil para exibir o cardápio de uma loja selecionada.") 
     @GetMapping("/restaurante/{restauranteId}") 
     public ResponseEntity<PagedResponse<ProdutoResponseDTO>> listarPorRestaurante( 
              @PathVariable Long restauranteId, 

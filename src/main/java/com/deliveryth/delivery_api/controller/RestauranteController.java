@@ -46,7 +46,7 @@ public class RestauranteController {
         this.service = service; 
 } 
 
-    @Operation(summary = "Cadastrar novo restaurante.") 
+    @Operation(summary = "Cadastrar novo restaurante.", description = "Criar um novo restaurante na plataforma") 
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Restaurante cadastrado com sucesso."), 
         @ApiResponse(responseCode = "400", description = "Erro de validação nos campos enviados."), 
@@ -67,7 +67,7 @@ public class RestauranteController {
              .body(new com.deliveryth.delivery_api.dto.responses.ApiResponse<>(response)); 
     } 
     
-    @Operation(summary = "Listar restaurantes ativos (paginado).") 
+    @Operation(summary = "Listar restaurantes ativos (paginado).", description = "Retorna uma lista com todos os restaurantes cadastrados que estão ativos") 
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Lista de restaurantes retornada com sucesso.") 
     }) 
@@ -86,7 +86,7 @@ public class RestauranteController {
             .body(response); 
     } 
     
-    @Operation(summary = "Buscar restaurante por Id.") 
+    @Operation(summary = "Buscar restaurante por ID.", description = "Retorna os detalhes de um restaurante específico através do identificador") 
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Restaurante encontrado com sucesso."), 
         @ApiResponse(responseCode = "404", description = "Restaurante não encontrado.") 
