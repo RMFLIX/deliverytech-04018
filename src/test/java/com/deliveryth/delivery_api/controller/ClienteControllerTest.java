@@ -1,39 +1,53 @@
 package com.deliveryth.delivery_api.controller;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import com.deliveryth.delivery_api.config.SecurityTestConfig;
 import com.deliveryth.delivery_api.dto.requests.ClienteDTO;
 import com.deliveryth.delivery_api.dto.responses.ClienteResponseDTO;
 import com.deliveryth.delivery_api.exception.BusinessException;
+import com.deliveryth.delivery_api.exception.EntityNotFoundException;
+import com.deliveryth.delivery_api.model.Usuario;
+import com.deliveryth.delivery_api.Security.JwtAuthenticationFilter;
 import com.deliveryth.delivery_api.service.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(
-    controllers = ClienteController.class
+    controllers = ClienteController.class,
     excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSGNABLE_TYPE
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = JwtAuthenticationFilter.class
     )
 )
 @Import(SecurityTestConfig.class)
 public class ClienteControllerTest {
-    @Autowired
+
+     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -46,72 +60,78 @@ public class ClienteControllerTest {
     private ClienteDTO clienteValido(){
         ClienteDTO dto = new ClienteDTO();
         dto.setNome("João Silva");
-        dto.setTelefone("(11)99999-9999");
+        dto.setTelefone("(11)9999-9999");
         dto.setEndereco("Rua A, 123");
         return dto;
     }
 
     @Test
-    @WithMockUser()
-    @DisplayName("Deve cadastrar o cliente quando o DTO for invalído.")
+    @WithMockUser(username = "teste@gmail.com")
+    @DisplayName("Deve cadastrar o cliente e retornar 201 quando cadastrado.")
     void deveCadastrarCliente() throws Exception{
-        ClienteDTO dto = clienteValido();
-       
+        ClienteDTO dto =  clienteValido();
+
         ClienteResponseDTO response = new ClienteResponseDTO();
         response.setNome("João Silva");
 
-        when(service.cadastrar(any(), eq("teste@gmail.com")))
-             .thenReturn(response);
+        when(service.cadastrar(any(ClienteDTO.class), any(Usuario.class)))
+            .thenReturn(response);
 
-
-             mockMvc.perform(pots("/api/clientes/cadastrar")
-             .contentType(MediaType.APPLICATION_JSON)
-             .Content(objectMapper.writeValueAsString(dto))
-             .andDo(print())
-             .andExpect(status().isCreated())
-             .andExpect(jsonPath("$.nome").value("João Silva")));
+        mockMvc.perform(post("/api/clientes/cadastrar")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.nome").value("João Silva"));
     }
 
     @Test
-    @DisplayName("Deve retornar 400 quando o DTO for invalído.")
+    @DisplayName("Deve retornar 400 quando o DTO for inválido.")
     void deveRetornar400QuandoDTOInvalido() throws Exception{
         ClienteDTO dto = new ClienteDTO();
         mockMvc.perform(post("/api/clientes/cadastrar")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(dto)))
-        .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
-    void deveRetornarErroAOCadastrarClienteDuplicado() throws Exception{
-        ClienteDTO dto = clienteValido();
+    @WithMockUser(username = "teste@gmail.com")
+    void deveRetornarErroAoCadastrarClienteDuplicado() throws Exception {
+        ClienteDTO dto =  clienteValido();
 
-        when(service.cadastrar(any(ClienteDTO.class), eq("teste@gmail.com")))
-        .thenThrow(new BusinessException("Cliente já cadastrado para este usúario."));
+        when(service.cadastrar(any(ClienteDTO.class), any(Usuario.class)))
+        .thenThrow(new BusinessException("Cliente já cadastrado para este usuário."));
 
-        mockMvc.perform()
+        mockMvc.perform(post("/api/clientes/cadastrar")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isConflict());
+
     }
 
+
     @Test
-    @WithMockUser(username = "teste@gmaul.com")
+    @WithMockUser(username = "teste@gmail.com")
     void deveListarClientesAtivos() throws Exception{
         ClienteResponseDTO cliente = new ClienteResponseDTO();
-        cliente.setNome("Mariane Chaves");
+        cliente.setNome("Elaine Soares");
 
         List<ClienteResponseDTO> lista = List.of(cliente);
 
         Page<ClienteResponseDTO> pageResponse = new PageImpl<>(lista);
 
-        when(service.listarAtivos(any( Pageable.class))).thenReturn(pageResponse);
+        when(service.listarAtivos(any(Pageable.class))).thenReturn(pageResponse);
 
         mockMvc.perform(get("/api/clientes")
-        .param("page", "0")
-        .param("size", "10")
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(atatus().isOk())
-        .andExpect(jsonPath("$.content").isArray())
-        .andExpect(jsonPath("$.content[0].nome").value("Mariane Chaves"));
+            .param("page", "0")
+            .param("size", "10")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content[0].nome").value("Mariane Chaves"));
+
     }
 
     @Test
@@ -123,26 +143,29 @@ public class ClienteControllerTest {
         when(service.buscarPorId(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/clientes/{id}", 1L))
-        .andExpect(status().isOk())
+
+         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.nome").value("Pedro Chaves"));
     }
 
     @Test
-    void deveRetornar404AoBuscarIdInexistente() throws Exception{
+    void deveRetornar404AoBuscarIdInexistente()throws Exception{
         Long idInexistente = 999L;
 
         when(service.buscarPorId(idInexistente))
         .thenThrow(new EntityNotFoundException("Cliente não encontrado."));
 
         mockMvc.perform(get("/api/clientes/{id}", idInexistente)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isNotFound());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNotFound());
     }
+
 
     @Test
     void deveInativarCliente() throws Exception{
         ClienteResponseDTO response = new ClienteResponseDTO();
+
         response.setId(1L);
 
         when(service.inativar(1L)).thenReturn(response);
@@ -151,4 +174,5 @@ public class ClienteControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(1L));
     }
+
 }

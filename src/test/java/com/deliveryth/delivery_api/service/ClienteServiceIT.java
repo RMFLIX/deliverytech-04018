@@ -1,29 +1,27 @@
 package com.deliveryth.delivery_api.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.Optional;
 
-import org.h2.mvstore.Page;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.deliveryth.delivery_api.dto.requests.ClienteDTO;
 import com.deliveryth.delivery_api.dto.responses.ClienteResponseDTO;
@@ -38,7 +36,7 @@ import com.deliveryth.delivery_api.repository.UsuarioRepository;
 @ExtendWith(MockitoExtension.class)
 public class ClienteServiceIT {
 
-    @Mock
+     @Mock
     private ClienteRepository clienteRepository;
 
     @Mock
@@ -47,46 +45,45 @@ public class ClienteServiceIT {
     @Mock
     private ModelMapper mapper;
 
-    
+    @InjectMocks
     private ClienteService service;
 
-
     private Usuario usuario;
-    private Cliente cliente;
+    private Cliente cliente; 
     private ClienteDTO dto;
     private ClienteResponseDTO clienteResponseDTO;
 
     @BeforeEach
     void setup(){
-        dto = new ClienteDTO("Beatriz Silva", "11-99999-9999", "Rua A, 123");
-    
+        dto = new ClienteDTO();
+
         usuario = new Usuario();
         usuario.setId(1L);
-        cliente.setUsuario(usuario);
         usuario.setEmail("bia@gmail.com");
         usuario.setRole(Role.CLIENTE);
         usuario.setAtivo(true);
-    
+
         cliente = new Cliente();
         cliente.setId(1L);
-        cliente.setNome(dto.getNome());
+        cliente.setUsuario(usuario);
         cliente.setEmail(usuario.getEmail());
         cliente.setAtivo(true);
 
-        clienteResponseDTO = new ClienteResponseDTO();
+         clienteResponseDTO = new ClienteResponseDTO();
         clienteResponseDTO.setId(1L);
         clienteResponseDTO.setEmail("bia@gmail.com");
+
     }
 
     @Test
     void deveCadastrarClienteComSucesso(){
-        when(usuarioRepository.findByEmail("bia@gmail.com")).thenReturn(OpenOption.of(usuario));
+        when(usuarioRepository.findByEmail("bia@gmail.com")).thenReturn(Optional.of(usuario));
         when(clienteRepository.existsByUsuario_Id(1L)).thenReturn(false);
-        when(mapper.map(dto,Cliente.class)).thenReturn(cliente);
+        when(mapper.map(dto, Cliente.class)).thenReturn(cliente);
         when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
         when(mapper.map(cliente, ClienteResponseDTO.class)).thenReturn(clienteResponseDTO);
 
-        ClienteResponseDTO resultado = service.cadastrar(dto, "bia@gmail.com");
+        ClienteResponseDTO resultado = service.cadastrar(dto, usuario);
 
         assertNotNull(resultado);
         assertEquals("bia@gmail.com", resultado.getEmail());
@@ -95,15 +92,15 @@ public class ClienteServiceIT {
 
     @Test
     void deveLancarExcecaoQuandoClienteJaExistir(){
-         when(usuarioRepository.findByEmail("bia@gmail.com")).thenReturn(OpenOption.of(usuario));
-         when(clienteRepository.existsByUsuario_Id(1L)).thenReturn(true);
-    
 
-    BusinessException ex = assertThrows(BusinessException.class, ()-> {
-    });
+                when(usuarioRepository.findByEmail("bia@gmail.com")).thenReturn(Optional.of(usuario));
+        when(clienteRepository.existsByUsuario_Id(1L)).thenReturn(true);
 
-    assertEquals("Cliente já cadastrado para este usuário.", ex.getMessage());
+        BusinessException ex = assertThrows(BusinessException.class, ()-> {
+        service.cadastrar(dto, usuario);
+        });
 
+        assertEquals("Cliente já cadastrado para este usuário.", ex.getMessage());
     }
 
     @Test
@@ -111,8 +108,9 @@ public class ClienteServiceIT {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Cliente> page = new PageImpl<>(List.of(cliente));
 
+        
         when(clienteRepository.findByAtivoTrue(pageable)).thenReturn(page);
-        when(mapper.map(any(Cliente.class), eq(ClienteResponseDTO.class))).thenReturn();
+        when(mapper.map(any(Cliente.class), eq(ClienteResponseDTO.class))).thenReturn(clienteResponseDTO);
 
         Page<ClienteResponseDTO> resultado = service.listarAtivos(pageable);
 
@@ -133,7 +131,7 @@ public class ClienteServiceIT {
     @Test
     void deveLancarExcecaoQuandoClienteNaoEncontrado(){
         when(clienteRepository.findById(1L)).thenReturn(Optional.empty());
-       
+
         assertThrows(EntityNotFoundException.class, ()->{
             service.buscarPorId(1L);
         });
@@ -158,7 +156,5 @@ public class ClienteServiceIT {
             service.inativar(1L);
         });
     }
-    
+
 }
-
-
