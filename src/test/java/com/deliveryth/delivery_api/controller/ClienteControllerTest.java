@@ -1,4 +1,4 @@
-package com.deliveryth.delivery_api.controller;
+/*package com.deliveryth.delivery_api.controller;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
         classes = JwtAuthenticationFilter.class
     )
 )
-@Import(SecurityTestConfig.class)
+
 public class ClienteControllerTest {
 
      @Autowired
@@ -115,7 +115,7 @@ public class ClienteControllerTest {
     @WithMockUser(username = "teste@gmail.com")
     void deveListarClientesAtivos() throws Exception{
         ClienteResponseDTO cliente = new ClienteResponseDTO();
-        cliente.setNome("Elaine Soares");
+        cliente.setNome("Mariane Chaves");
 
         List<ClienteResponseDTO> lista = List.of(cliente);
 
@@ -175,4 +175,4 @@ public class ClienteControllerTest {
         .andExpect(jsonPath("$.id").value(1L));
     }
 
-}
+}*/

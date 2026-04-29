@@ -4,7 +4,6 @@ package com.deliveryth.delivery_api.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,7 +28,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf(c -> c.disable())
+        http
+        
+        .csrf(c -> c.disable())
 
         .sessionManagement(sm ->
             sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -45,6 +46,11 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
             .requestMatchers("/api/auth/me**").authenticated()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            
+            .requestMatchers("/custmon-health", "/custon-info").permitAll()
+            
+            .requestMatchers("/api/teste").permitAll()
+            .requestMatchers("/actuator/**").permitAll()
 
             .requestMatchers(HttpMethod.GET, "/api/restaurantes**").permitAll()
             .requestMatchers(HttpMethod.PATCH, "api/restaurantes**")

@@ -1,4 +1,4 @@
-package com.deliveryth.delivery_api.config;
+/*package com.deliveryth.delivery_api.config;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +22,6 @@ import com.deliveryth.delivery_api.repository.ItemPedidoRepository;
 import com.deliveryth.delivery_api.repository.PedidoRepository;
 import com.deliveryth.delivery_api.repository.ProdutoRepository;
 import com.deliveryth.delivery_api.repository.RestauranteRepository;
-
 
 @Configuration
 public class DataLoader {
@@ -108,7 +108,7 @@ public class DataLoader {
 
             System.out.println("> Restaurantes ativos");
             restauranteRepository.findByAtivoTrue()
-                 .forEach(r -> System.out.println(r.getNome())); */
+                 .forEach(r -> System.out.println(r.getNome())); 
             
             System.out.println("======Inserindo Produtos======");
 
@@ -210,4 +210,4 @@ public class DataLoader {
             ));
          };
     }
-}
+}*/
