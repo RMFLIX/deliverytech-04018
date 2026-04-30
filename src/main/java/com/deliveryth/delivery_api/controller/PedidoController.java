@@ -1,5 +1,6 @@
 package com.deliveryth.delivery_api.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import com.deliveryth.delivery_api.dto.requests.PedidoDTO;
 import com.deliveryth.delivery_api.dto.responses.ApiResponse;
 import com.deliveryth.delivery_api.dto.responses.PagedResponse;
 import com.deliveryth.delivery_api.dto.responses.PedidoResponseDTO;
+import com.deliveryth.delivery_api.model.Usuario;
 import com.deliveryth.delivery_api.service.PedidoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +44,12 @@ public class PedidoController {
         description = "Pedido criado com secesso."
     )
     @PostMapping
-    public ResponseEntity<ApiResponse<PedidoResponseDTO>> criar(@RequestBody @Valid PedidoDTO dto) {
-        return ResponseEntity.ok(new ApiResponse<>(pedidoService.criarPedido(dto)));
+    public ResponseEntity<ApiResponse<PedidoResponseDTO>> criar(
+        @RequestBody @Valid PedidoDTO dto,
+         Authentication authentication) {
+
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+        return ResponseEntity.ok(new ApiResponse<>(pedidoService.criarPedido(dto, usuarioLogado)));
     }
 
     @Operation(summary = "Listar histórico de pedidos do cliente (paginado).", description = "Retornar todos os detalhes de um pedido específico, incluindo o status atual (PENDENTE, PREPARANDO, ENTREGUE).")
@@ -69,20 +75,32 @@ public class PedidoController {
             )
         })
         @PutMapping("/{id}/confirmar")
-        public ResponseEntity<ApiResponse<PedidoResponseDTO>> confirmar(@PathVariable Long id) {
-            var resultado = pedidoService.confirmarPedido(id);
+        public ResponseEntity<ApiResponse<PedidoResponseDTO>> confirmar(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+            Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+            var resultado = pedidoService.confirmarPedido(id, usuarioLogado);
             return ResponseEntity.ok(new ApiResponse<>(resultado));
         }
 
         @Operation(summary = "Avançar o status do pedido (Fluxo: CONFIRMADO -> PREPARANDO-> ENTREGA.", description = "Permite que o restaurante alterne do pedido. Exemplo: De 'PENDENTE' para 'PREPARANDO'.")
         @PatchMapping("/{id}/status/avancar")
-        public ResponseEntity<ApiResponse<PedidoResponseDTO>> avancarStatus(@PathVariable Long id){
-            return ResponseEntity.ok(new ApiResponse<>(pedidoService.atualizarStatus(id)));
+        public ResponseEntity<ApiResponse<PedidoResponseDTO>> avancarStatus(
+            @PathVariable Long id,
+            Authentication authentication){
+
+            Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+            return ResponseEntity.ok(new ApiResponse<>(pedidoService.atualizarStatus(id, usuarioLogado)));
         }
 
         @Operation(summary = "Cancelar um pedido.")
         @PatchMapping("/{id}/cancelar")
-        public ResponseEntity<ApiResponse<PedidoResponseDTO>> cancelar(@PathVariable Long id){
-            return ResponseEntity.ok(new ApiResponse<>(pedidoService.cancelarPedido(id)));
+        public ResponseEntity<ApiResponse<PedidoResponseDTO>> cancelar(
+            @PathVariable Long id,
+            Authentication authentication){
+
+            Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+            return ResponseEntity.ok(new ApiResponse<>(pedidoService.cancelarPedido(id, usuarioLogado)));
 }
 }
