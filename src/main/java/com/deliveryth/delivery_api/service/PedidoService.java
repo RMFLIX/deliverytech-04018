@@ -2,7 +2,6 @@ package com.deliveryth.delivery_api.service;
 
 import java.math.BigDecimal;
 
-import org.aspectj.weaver.tools.Trace;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +47,6 @@ public class PedidoService {
     
     private final ModelMapper mapper;
 
-    private final Trace trace;
 
     private PedidoResponseDTO toResponseDTO(Pedido pedido){
         return mapper.map(pedido, PedidoResponseDTO.class);
@@ -59,7 +57,7 @@ public class PedidoService {
          RestauranteRepository restauranteRepository,
          ItemPedidoRepository itemPedidoRepository,
          ProdutoRepository produtoRepository,
-         ModelMapper mapper, Trace trace){
+         ModelMapper mapper){
             
             this.pedidoRepository = pedidoRepository;
             this.clienteRepository = clienteRepository;
@@ -67,7 +65,6 @@ public class PedidoService {
             this.itemPedidoRepository = itemPedidoRepository;
             this.produtoRepository = produtoRepository;
             this.mapper = mapper;
-            this.trace = trace;
         }
 
         private PedidoResponseDTO toDTO(Pedido pedido){

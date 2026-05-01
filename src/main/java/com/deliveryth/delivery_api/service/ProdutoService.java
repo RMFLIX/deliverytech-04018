@@ -1,6 +1,8 @@
 package com.deliveryth.delivery_api.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import com.deliveryth.delivery_api.repository.ProdutoRepository;
 import com.deliveryth.delivery_api.repository.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
+
 
 @Service 
 public class ProdutoService { 
@@ -36,6 +39,7 @@ public class ProdutoService {
         return dto; 
     } 
             
+    @CacheEvict(value = "produtoPorRestaurante", allEntries = true)
     @Transactional public ProdutoResponseDTO cadastrar(Long restauranteId, ProdutoDTO produto) { 
         Restaurante restaurante = restauranteRepository.findById(restauranteId) 
         .orElseThrow(() -> new EntityNotFoundException("Restaurante não localizado."));
@@ -51,6 +55,7 @@ public class ProdutoService {
         return returnResponseDTO(produtoRepository.save(novoProduto)); 
     } 
     
+    @Cacheable("produtoPorRestaurante")
     public Page<ProdutoResponseDTO> listarPorRestaurante(Long restauranteId, Pageable pageable) { 
         if (!restauranteRepository.existsById(restauranteId)) { 
             throw new EntityNotFoundException("Restaurante não localizado."); 
@@ -59,12 +64,18 @@ public class ProdutoService {
         .map(this::returnResponseDTO); 
     } 
         
+    @Cacheable("produtoPorId")
     public ProdutoResponseDTO buscarPorId(Long id) { 
         Produto p = produtoRepository.findById(id) 
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
         return returnResponseDTO(p);
     }
 
+    public boolean validarEstoque(Long produtoId, Integer quantidade){
+        return true;
+    }
+
+    @CacheEvict( value = {"produtoPorRestaurante","produtoPorId"}, allEntries = true)
     @Transactional
     public ProdutoResponseDTO toggleDisponibilidade(Long produtoId){
         Produto produto = produtoRepository.findById(produtoId)
