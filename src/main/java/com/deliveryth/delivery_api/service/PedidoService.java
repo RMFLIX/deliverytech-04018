@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -150,6 +152,7 @@ public class PedidoService {
     }
 
     @Transactional
+    @CacheEvict(value = "pedidos", key = "#pedidoId")
     public PedidoResponseDTO atualizarStatus(Long pedidoId, Usuario usuarioLogado){
 
         Pedido pedido = pedidoRepository.findById(pedidoId)
@@ -200,6 +203,16 @@ public class PedidoService {
         .map(this::toDTO);
     }
 
+    @Transactional
+    @Cacheable(value = "pedidos", key = "#id")
+    public PedidoResponseDTO buscarPorId(Long pedidoId) {
+   
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+        .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado."));
+
+        return toResponseDTO(pedido);
+}
+
     /* public ItemPedido adicionarItem(Long pedidoId, Long produtoId, Integer quantidade){ 
         Pedido pedido = pedidoRepository.findById(pedidoId) 
         .orElseThrow(()-> new IllegalArgumentException("Pedido não encontrado.")); 
@@ -226,5 +239,4 @@ public class PedidoService {
         }
 
 */
-
 }

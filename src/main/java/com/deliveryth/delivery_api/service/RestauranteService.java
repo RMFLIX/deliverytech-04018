@@ -3,11 +3,13 @@ package com.deliveryth.delivery_api.service;
 import java.math.BigDecimal;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliveryth.delivery_api.dto.requests.PedidoDTO;
 import com.deliveryth.delivery_api.dto.requests.RestauranteDTO;
 import com.deliveryth.delivery_api.dto.responses.RestauranteResponseDTO;
 import com.deliveryth.delivery_api.enums.CategoriaRestaurante;
@@ -76,4 +78,5 @@ public class RestauranteService {
         restaurante.setAtivo(!restaurante.isAtivo()); 
         return mapper.map(restaurante, RestauranteResponseDTO.class); 
     } 
+
 }

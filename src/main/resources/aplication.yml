@@ -1,0 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,env"
+  endpoint:
+    health:
+      show-details: always
+
+info:
+  app:
+    name: "Delivery API"
+    description: "API de Gerenciamento de Pedidos"
+    version: "1.0.0"
+  env:
+    java-version: "${java.version}"
+    os-name: "${os.name}"
+
+management:
+  info:
+    env:
+      enabled: true
+    git:
+      mode: full

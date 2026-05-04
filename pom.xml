@@ -31,6 +31,10 @@
 	</properties>
 	<dependencies>
 	  <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-redis</artifactId>
+      </dependency>
+	  <dependency>
           <groupId>org.aspectj</groupId>
           <artifactId>aspectjweaver</artifactId>
 		  <scope>runtime</scope>
@@ -60,7 +64,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>3.2.5</version> <!-- Check for latest version -->
+			<version>3.2.5</version> 
 		</dependency>
 		<dependency>
             <groupId>org.springdoc</groupId>
@@ -89,7 +93,7 @@
        </dependency>
        <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson, jjwt-orgjson -->
+            <artifactId>jjwt-jackson</artifactId> 
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
@@ -130,20 +134,31 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+		<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+         <configuration>
+             <excludes>
+                 <exclude>
+                      <groupId>org.projectlombok</groupId>
+                      <artifactId>lombok</artifactId>
+                  </exclude>
+             </excludes>
+         </configuration>
+    <executions>
+         <execution>
+              <goals>
+                  <goal>build-info</goal>
+                     </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+			     <plugin>
+                     <groupId>pl.project13.maven</groupId>
+                     <artifactId>git-commit-id-plugin</artifactId>
+              </plugin>
+         </plugins>
+     </build>
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>
