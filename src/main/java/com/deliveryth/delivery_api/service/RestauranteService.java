@@ -3,6 +3,7 @@ package com.deliveryth.delivery_api.service;
 import java.math.BigDecimal;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,8 @@ public class RestauranteService {
         this.repository = repository; 
         this.mapper = mapper; 
     } 
-        
+
+    @CacheEvict(value = "restaurantes", allEntries = true)
     @Transactional 
     public RestauranteResponseDTO cadastrar(RestauranteDTO dto) { 
         if (repository.existsByNome(dto.getNome())) { 
@@ -46,9 +48,17 @@ public class RestauranteService {
     return mapper.map(salvo, RestauranteResponseDTO.class); 
     } 
     
+    @Cacheable(value = "restaurantes", key = "'todos'")
     public Page<RestauranteResponseDTO> listarAtivos(Pageable pageable) { 
+       System.out.print("BUSCOU NO BANCO!");
+        try{
+        Thread.sleep(2000);
+       }catch(InterruptedException e){
+        Thread.currentThread().interrupt();
+       }
+
         return repository.findByAtivoTrue(pageable) 
-        .map(r -> mapper.map(r, RestauranteResponseDTO.class));
+                .map(r -> mapper.map(r, RestauranteResponseDTO.class));
     }
 
     public Page<RestauranteResponseDTO> buscarPorCategoria(String categoria, Pageable pageable) { 
@@ -63,13 +73,21 @@ public class RestauranteService {
         return repository.findByCategoriaAndAtivoTrue(categoriaEnum, pageable)
         .map(r -> mapper.map(r, RestauranteResponseDTO.class)); 
     } 
-        
+       
+    @Cacheable(value = "restaurantes", key = "#id")
     public RestauranteResponseDTO buscarPorId(Long id) { 
+    try{
+        Thread.sleep(2000);
+        }catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+
         Restaurante r = repository.findById(id) 
         .orElseThrow(() -> new EntityNotFoundException("Restaurante não encontrado.")); 
         return mapper.map(r, RestauranteResponseDTO.class); 
     } 
-        
+
+    @CacheEvict(value = "restaurantes", key = "#id")
     @Transactional
     public RestauranteResponseDTO toggle(Long id) { 
         Restaurante restaurante = repository.findById(id) 

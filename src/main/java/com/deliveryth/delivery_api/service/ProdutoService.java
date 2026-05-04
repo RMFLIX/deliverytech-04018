@@ -57,10 +57,19 @@ public class ProdutoService {
     
     @Cacheable("produtoPorRestaurante")
     public Page<ProdutoResponseDTO> listarPorRestaurante(Long restauranteId, Pageable pageable) { 
+        
+        try{
+            Thread.sleep(2000);
+        }catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+
+
         if (!restauranteRepository.existsById(restauranteId)) { 
             throw new EntityNotFoundException("Restaurante não localizado."); 
         }
-        return produtoRepository.findByRestauranteIdAndDisponivelTrue(restauranteId, pageable) 
+        return produtoRepository
+        .findByRestauranteIdAndDisponivelTrue(restauranteId, pageable) 
         .map(this::returnResponseDTO); 
     } 
         

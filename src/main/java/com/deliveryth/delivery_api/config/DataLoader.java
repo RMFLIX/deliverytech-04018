@@ -1,4 +1,4 @@
-/*package com.deliveryth.delivery_api.config;
+package com.deliveryth.delivery_api.config;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -103,7 +103,7 @@ public class DataLoader {
 
             System.out.println("> Buscar Restaurante por Categoria");
 
-            /* restauranteRepository.findByCategoria("Hamburgueria")
+             restauranteRepository.findByCategoria("Hamburgueria")
             .forEach(c -> System.out.println("Restaurante(Hamburgueria): " + c.getNome()));
 
             System.out.println("> Restaurantes ativos");
@@ -210,4 +210,4 @@ public class DataLoader {
             ));
          };
     }
-}*/
+}
